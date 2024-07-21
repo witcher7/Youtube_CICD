@@ -334,12 +334,11 @@ $ git add .
 $ git commit -m "test change"
 $ git push origin main
 =============================================================================================================================================================================================
-[F] Complete jenkins pipeline script
 pipeline {
     agent any
     tools {
         jdk 'jdk17'
-        nodejs 'node16'
+        nodejs 'nodejs'
     }
     environment {
         SCANNER_HOME = tool 'sonar-scanner'
@@ -352,7 +351,7 @@ pipeline {
         }
         stage('Checkout from Git') {
             steps {
-                git branch: 'main', url: 'https://github.com/Ashfaque-9x/a-youtube-clone-app.git'
+                git branch: 'main', url: 'https://github.com/witcher7/Youtube_CICD.git'
             }
         }
         stage("Sonarqube Analysis") {
@@ -385,8 +384,8 @@ pipeline {
                  script{
                    withDockerRegistry(credentialsId: 'dockerhub', toolName: 'docker'){   
                       sh "docker build -t youtube-clone ."
-                      sh "docker tag youtube-clone ashfaque9x/youtube-clone:latest "
-                      sh "docker push ashfaque9x/youtube-clone:latest "
+                      sh "docker tag youtube-clone rg7121/cicd-pipe:latest"
+                      sh "docker push rg7121/cicd-pipe:latest "
                     }
                 }
             }
@@ -395,6 +394,9 @@ pipeline {
             steps{
                 sh "trivy image ashfaque9x/youtube-clone:latest > trivyimage.txt" 
             }
+        }
+    }
+}
         }
         stage('Deploy to Kubernets'){
             steps{
